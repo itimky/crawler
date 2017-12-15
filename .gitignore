@@ -1,0 +1,7 @@
+!**/.gitkeep
+
+config_prod.py
+
+*.pyc
+*.log
+*.sock
