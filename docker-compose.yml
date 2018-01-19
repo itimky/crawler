@@ -21,6 +21,16 @@ services:
     volumes:
       - /dev/shm:/dev/shm
 
+  proxy:
+    build:
+      context: proxy
+      dockerfile: Dockerfile
+    command: node server.js
+    expose:
+      - 8080
+    volumes:
+      - ./var/log:/app/log
+
   flask:
     build:
       context: .
@@ -32,4 +42,3 @@ services:
     volumes:
       - .:/app
       - ./var:/app/var/
-

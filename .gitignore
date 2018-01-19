@@ -1,5 +1,8 @@
 !**/.gitkeep
 
+node_modules
+
+config_prod.js
 config_prod.py
 
 *.pyc
