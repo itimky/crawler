@@ -33,12 +33,12 @@ services:
 
   flask:
     build:
-      context: .
+      context: api
       dockerfile: Dockerfile
     hostname: flask
     environment:
       - FLASK_DEBUG=1
-    command: sh -c "uwsgi --ini=uwsgi.ini --strict --py-autoreload=1"
+    command: sh -c "uwsgi --ini=api/uwsgi.ini --strict --py-autoreload=1"
     volumes:
-      - .:/app
-      - ./var:/app/var/
+      - ./api:/app/api
+      - ./var:/app/var
