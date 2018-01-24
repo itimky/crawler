@@ -2,6 +2,7 @@
   "name": "proxy",
   "license": "0BSD",
   "dependencies": {
-    "proxy-chain": "^0.1.16"
+    "proxy-chain": "^0.1.16",
+    "rufus": "^0.5.7"
   }
 }

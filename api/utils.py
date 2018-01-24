@@ -9,10 +9,21 @@ from selenium.webdriver.support.wait import WebDriverWait
 from .config import HUB_URL, KEY_ANTIGATE
 
 
-def get_chrome():
+def get_chrome_ipv4():
+    capabilities = DesiredCapabilities.CHROME
+    capabilities['applicationName'] = 'chrome-ipv4'
     driver = webdriver.Remote(
         command_executor=HUB_URL,
-        desired_capabilities=DesiredCapabilities.CHROME)
+        desired_capabilities=capabilities)
+    return driver
+
+
+def get_chrome_ipv6():
+    capabilities = DesiredCapabilities.CHROME
+    capabilities['applicationName'] = 'chrome-ipv6'
+    driver = webdriver.Remote(
+        command_executor=HUB_URL,
+        desired_capabilities=capabilities)
     return driver
 
 

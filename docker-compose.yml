@@ -5,20 +5,40 @@ services:
     image: selenium/hub:3.8.1
     environment:
       - GRID_TIMEOUT=45
-      - GRID_MAX_SESSION=5
-    expose:
-      - 4444
+      - GRID_MAX_SESSION=20
+    volumes:
+      - /usr/share/zoneinfo/Europe/Moscow:/etc/localtime
 
-  chrome:
+  chrome-ipv4:
     image: selenium/node-chrome:3.8.1
     environment:
       - HUB_PORT_4444_TCP_ADDR=hub
       - HUB_PORT_4444_TCP_PORT=4444
       - NODE_MAX_INSTANCES=4
       - NODE_MAX_SESSION=4
+      - NODE_APPLICATION_NAME=chrome-ipv4
+      - http_proxy=http://proxy:8080
+      - https_proxy=http://proxy:8080
     depends_on:
       - hub
     volumes:
+      - /usr/share/zoneinfo/Europe/Moscow:/etc/localtime
+      - /dev/shm:/dev/shm
+
+  chrome-ipv6:
+    image: selenium/node-chrome:3.8.1
+    environment:
+      - HUB_PORT_4444_TCP_ADDR=hub
+      - HUB_PORT_4444_TCP_PORT=4444
+      - NODE_MAX_INSTANCES=16
+      - NODE_MAX_SESSION=16
+      - NODE_APPLICATION_NAME=chrome-ipv6
+      - http_proxy=http://proxy:5050
+      - https_proxy=http://proxy:5050
+    depends_on:
+      - hub
+    volumes:
+      - /usr/share/zoneinfo/Europe/Moscow:/etc/localtime
       - /dev/shm:/dev/shm
 
   proxy:
@@ -27,18 +47,18 @@ services:
       dockerfile: Dockerfile
     command: node server.js
     expose:
+      - 5050
       - 8080
     volumes:
+      - /usr/share/zoneinfo/Europe/Moscow:/etc/localtime
       - ./var/log:/app/log
 
   flask:
     build:
       context: api
       dockerfile: Dockerfile
-    hostname: flask
-    environment:
-      - FLASK_DEBUG=1
     command: sh -c "uwsgi --ini=api/uwsgi.ini --strict --py-autoreload=1"
     volumes:
+      - /usr/share/zoneinfo/Europe/Moscow:/etc/localtime
       - ./api:/app/api
       - ./var:/app/var

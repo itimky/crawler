@@ -37,7 +37,7 @@ class WordstatHistory(Resource):
 
 
 def get_wordstat(type_, query):
-    driver = utils.get_chrome()
+    driver = utils.get_chrome_ipv4()
     try:
         # Fake page to set cookies
         driver.get('https://wordstat.yandex.ru/404')
