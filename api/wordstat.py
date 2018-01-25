@@ -1,18 +1,13 @@
 import tempfile
 
 import requests
-from flask_restful import reqparse, fields, marshal_with, Resource, abort
+from flask_restful import reqparse, Resource, abort
 
 from . import utils
 from api.config import WORDSTAT_LOGIN, WORDSTAT_PASSWD, CAPTCHA_RETRIES
 
 
 WORDSTAT_URL = 'https://wordstat.yandex.ru/#!/%s?words=%s'
-
-
-WORDSTAT_FIELDS = {
-    'soup': fields.String
-}
 
 
 def get_query_parser():
@@ -22,15 +17,15 @@ def get_query_parser():
 
 
 class WordstatWords(Resource):
-    @marshal_with(WORDSTAT_FIELDS)
-    def get(self):
+    @staticmethod
+    def get():
         args = get_query_parser().parse_args()
         return {'soup': get_wordstat('words', args.query)}
 
 
 class WordstatHistory(Resource):
-    @marshal_with(WORDSTAT_FIELDS)
-    def get(self):
+    @staticmethod
+    def get():
         args = get_query_parser().parse_args()
         return {'soup': get_wordstat('history', args.query)}
 
