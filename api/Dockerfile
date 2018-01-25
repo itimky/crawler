@@ -1,13 +1,7 @@
 FROM python:3.6.1-alpine
 
 MAINTAINER Aevrika
-RUN apk add --no-cache g++ linux-headers musl-dev
-#RUN apk add --no-cache \
-#            curl \
-#            libffi-dev \
-#            libxml2-dev \
-#            libxslt-dev
-#            postgresql-dev
+RUN apk add --no-cache g++ linux-headers
 
 WORKDIR /app
 ADD ./requirements.txt /app/requirements.txt
