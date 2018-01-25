@@ -2,13 +2,38 @@ import pickle
 from os import path
 
 from antigate import AntiGate
+from htmlmin.decorator import htmlmin
 from selenium import webdriver
 from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 from selenium.webdriver.support.wait import WebDriverWait
+from selenium.common.exceptions import WebDriverException
+from bs4 import BeautifulSoup
 
 from .config import HUB_URL, KEY_ANTIGATE
 
 
+class DriverContextManager(object):
+    def __init__(self, driver):
+        self.driver = driver
+
+    def __enter__(self):
+        return self.driver
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        try:
+            self.driver.quit()
+        except WebDriverException:
+            pass
+        return False
+
+
+def context_manager(fn):
+    def wrapper():
+        return DriverContextManager(fn())
+    return wrapper
+
+
+@context_manager
 def get_chrome_ipv4():
     capabilities = DesiredCapabilities.CHROME
     capabilities['applicationName'] = 'chrome-ipv4'
@@ -18,6 +43,7 @@ def get_chrome_ipv4():
     return driver
 
 
+@context_manager
 def get_chrome_ipv6():
     capabilities = DesiredCapabilities.CHROME
     capabilities['applicationName'] = 'chrome-ipv6'
@@ -25,6 +51,14 @@ def get_chrome_ipv6():
         command_executor=HUB_URL,
         desired_capabilities=capabilities)
     return driver
+
+
+@htmlmin
+def get_soup(page_source):
+    soup = BeautifulSoup(page_source, 'html.parser')
+    for s in soup(['script', 'style']):
+        s.decompose()
+    return str(soup)
 
 
 def load_cookies(driver, file):

@@ -2,7 +2,6 @@ import tempfile
 
 import requests
 from flask_restful import reqparse, fields, marshal_with, Resource, abort
-from bs4 import BeautifulSoup
 
 from . import utils
 from api.config import WORDSTAT_LOGIN, WORDSTAT_PASSWD, CAPTCHA_RETRIES
@@ -37,8 +36,7 @@ class WordstatHistory(Resource):
 
 
 def get_wordstat(type_, query):
-    driver = utils.get_chrome_ipv4()
-    try:
+    with utils.get_chrome_ipv4() as driver:
         # Fake page to set cookies
         driver.get('https://wordstat.yandex.ru/404')
         utils.load_cookies(driver, 'wordstat.pkl')
@@ -51,11 +49,7 @@ def get_wordstat(type_, query):
         utils.save_cookies(driver, 'wordstat.pkl')
         if attempt == CAPTCHA_RETRIES:
             abort(500, error='max captcha retries (%s)' % (CAPTCHA_RETRIES,))
-        return BeautifulSoup(driver.page_source, 'html.parser')
-    except Exception as e:
-        abort(500, error=str(e))
-    finally:
-        driver.quit()
+        return utils.get_soup(driver.page_source)
 
 
 def wordstat_login(driver):
