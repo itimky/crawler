@@ -3,6 +3,7 @@ version: '3'
 services:
   hub:
     image: selenium/hub:3.8.1
+    restart: unless-stopped
     environment:
       - GRID_TIMEOUT=45
       - GRID_MAX_SESSION=20
@@ -11,6 +12,7 @@ services:
 
   chrome-ipv4:
     image: selenium/node-chrome:3.8.1
+    restart: unless-stopped
     environment:
       - HUB_PORT_4444_TCP_ADDR=hub
       - HUB_PORT_4444_TCP_PORT=4444
@@ -27,6 +29,7 @@ services:
 
   chrome-ipv6:
     image: selenium/node-chrome:3.8.1
+    restart: unless-stopped
     environment:
       - HUB_PORT_4444_TCP_ADDR=hub
       - HUB_PORT_4444_TCP_PORT=4444
@@ -45,6 +48,7 @@ services:
     build:
       context: proxy
       dockerfile: Dockerfile
+    restart: unless-stopped
     command: node server.js
     expose:
       - 5050
@@ -57,6 +61,7 @@ services:
     build:
       context: api
       dockerfile: Dockerfile
+    restart: unless-stopped
     command: sh -c "uwsgi --ini=api/uwsgi.ini --strict --py-autoreload=1"
     volumes:
       - /usr/share/zoneinfo/Europe/Moscow:/etc/localtime
