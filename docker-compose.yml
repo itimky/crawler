@@ -8,7 +8,7 @@ services:
       - GRID_TIMEOUT=45
       - GRID_MAX_SESSION=20
     volumes:
-      - /usr/share/zoneinfo/Europe/Moscow:/etc/localtime
+      - /usr/share/zoneinfo/Europe/Moscow:/etc/localtime:ro
 
   chrome-ipv4:
     image: selenium/node-chrome:3.8.1
@@ -24,7 +24,7 @@ services:
     depends_on:
       - hub
     volumes:
-      - /usr/share/zoneinfo/Europe/Moscow:/etc/localtime
+      - /usr/share/zoneinfo/Europe/Moscow:/etc/localtime:ro
       - /dev/shm:/dev/shm
 
   chrome-ipv6:
@@ -41,7 +41,7 @@ services:
     depends_on:
       - hub
     volumes:
-      - /usr/share/zoneinfo/Europe/Moscow:/etc/localtime
+      - /usr/share/zoneinfo/Europe/Moscow:/etc/localtime:ro
       - /dev/shm:/dev/shm
 
   proxy:
@@ -54,7 +54,7 @@ services:
       - 5050
       - 8080
     volumes:
-      - /usr/share/zoneinfo/Europe/Moscow:/etc/localtime
+      - /usr/share/zoneinfo/Europe/Moscow:/etc/localtime:ro
       - ./var/log:/app/log
 
   flask:
@@ -64,6 +64,6 @@ services:
     restart: unless-stopped
     command: sh -c "uwsgi --ini=api/uwsgi.ini --strict --py-autoreload=1"
     volumes:
-      - /usr/share/zoneinfo/Europe/Moscow:/etc/localtime
+      - /usr/share/zoneinfo/Europe/Moscow:/etc/localtime:ro
       - ./api:/app/api
       - ./var:/app/var
