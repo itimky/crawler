@@ -19,7 +19,7 @@ class Google(Resource):
     def get():
         args = get_query_parser().parse_args()
         link = GOOGLE_URL % (args.query, args.region)
-        for i in range(16):
+        for i in range(RETRIES):
             with utils.get_chrome_ipv6() as driver:
                 driver.get(link)
                 if 'IndexRedirect?' not in driver.current_url \
