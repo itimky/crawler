@@ -11,6 +11,11 @@ WORDSTAT_URL = 'https://wordstat.yandex.ru/#!/%s?words=%s'
 
 
 def get_query_parser():
+    """
+    @apiDefine WordstatQueryParams
+
+    @apiParam (QueryParam) {String} query Search query.
+    """
     parser = reqparse.RequestParser()
     parser.add_argument('query', type=str, location='args', required=True)
     return parser
@@ -19,6 +24,16 @@ def get_query_parser():
 class WordstatWords(Resource):
     @staticmethod
     def get():
+        """
+        @api {get} /wordstat/words Get wordstat words
+        @apiVersion 0.1.0
+        @apiName GetWordstatWords
+        @apiGroup Wordstat
+
+        @apiUse WordstatQueryParams
+
+        @apiSuccess {String} soup Soup.
+        """
         args = get_query_parser().parse_args()
         return {'soup': get_wordstat('words', args.query)}
 
@@ -26,6 +41,16 @@ class WordstatWords(Resource):
 class WordstatHistory(Resource):
     @staticmethod
     def get():
+        """
+        @api {get} /wordstat/history Get wordstat history
+        @apiVersion 0.1.0
+        @apiName GetWordstatHistory
+        @apiGroup Wordstat
+
+        @apiUse WordstatQueryParams
+
+        @apiSuccess {String} soup Soup.
+        """
         args = get_query_parser().parse_args()
         return {'soup': get_wordstat('history', args.query)}
 
