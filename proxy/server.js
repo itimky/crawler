@@ -25,7 +25,7 @@ function* proxyIPv6Ring() {
   while(true) {
     // To prevent RangeError if proxies has been changed
     let currentProxies = proxiesIPv6;
-    yield currentProxies[i = i + 1 % currentProxies.length];
+    yield currentProxies[i = (i + 1) % currentProxies.length];
   }
 }
 
