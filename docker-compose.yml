@@ -5,6 +5,7 @@ services:
     image: selenium/hub:3.8.1
     restart: unless-stopped
     environment:
+      - JAVA_OPTS=-Dselenium.LOGGER.level=WARNING
       - GRID_TIMEOUT=45
       - GRID_MAX_SESSION=20
     volumes:
@@ -14,6 +15,7 @@ services:
     image: selenium/node-chrome:3.8.1
     restart: unless-stopped
     environment:
+      - JAVA_OPTS=-Dselenium.LOGGER.level=WARNING
       - HUB_PORT_4444_TCP_ADDR=hub
       - HUB_PORT_4444_TCP_PORT=4444
       - NODE_MAX_INSTANCES=4
@@ -31,6 +33,7 @@ services:
     image: selenium/node-chrome:3.8.1
     restart: unless-stopped
     environment:
+      - JAVA_OPTS=-Dselenium.LOGGER.level=WARNING
       - HUB_PORT_4444_TCP_ADDR=hub
       - HUB_PORT_4444_TCP_PORT=4444
       - NODE_MAX_INSTANCES=16
