@@ -2,7 +2,7 @@ from flask import Flask, Blueprint
 from flask_restful import Api, output_json
 
 from .google import Google
-from .wordstat import WordstatWords, WordstatHistory
+from .wordstat import WordstatWords, WordstatHistory, GetIP
 
 
 def create_api(blueprint):
@@ -12,6 +12,7 @@ def create_api(blueprint):
     }
 
     api.add_resource(Google, '/google', endpoint='google')
+    api.add_resource(GetIP, '/get_ip', endpoint='get_ip')
     api.add_resource(WordstatWords, '/wordstat/words',
                      endpoint='wordstat_words')
     api.add_resource(WordstatHistory, '/wordstat/history',

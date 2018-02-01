@@ -13,15 +13,20 @@ from .config import HUB_URL, KEY_ANTIGATE
 
 
 class DriverContextManager(object):
-    def __init__(self, driver):
-        self.driver = driver
+    def __init__(self, make_driver):
+        self.make_driver = make_driver
+        self.driver = None
 
     def __enter__(self):
+        if not self.driver:
+            self.driver = self.make_driver()
         return self.driver
 
     def __exit__(self, exc_type, exc_val, exc_tb):
         try:
-            self.driver.quit()
+            # self.driver.get("about:blank")
+            self.driver.delete_all_cookies()
+            # self.driver.execute_script('localStorage.clear();')
         except WebDriverException:
             pass
         return False
@@ -29,7 +34,10 @@ class DriverContextManager(object):
 
 def context_manager(fn):
     def wrapper():
-        return DriverContextManager(fn())
+        if not wrapper.dcm:
+            wrapper.dcm = DriverContextManager(fn)
+        return wrapper.dcm
+    wrapper.dcm = None
     return wrapper
 
 

@@ -121,3 +121,19 @@ def wordstat_captcha(driver):
         traceback.print_exc()
         print(driver.page_source)
         print(e)
+
+
+class GetIP(Resource):
+    @staticmethod
+    def get():
+        with utils.get_chrome_ipv6() as driver:
+            driver.get('https://www.whatismyip.com/my-ip-information/')
+            ip = ''
+            try:
+                rootEl = driver.find_element_by_class_name('ip')
+                for el in rootEl.find_elements_by_xpath('.//*[not(self::div)]'):
+                    ip += el.text
+            except:
+                pass
+
+            return {'ip': ip}

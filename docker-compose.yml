@@ -6,8 +6,8 @@ services:
     restart: unless-stopped
     environment:
       - JAVA_OPTS=-Dselenium.LOGGER.level=WARNING
-      - GRID_TIMEOUT=45
-      - GRID_MAX_SESSION=20
+      - GRID_TIMEOUT=0
+      - GRID_MAX_SESSION=4
     volumes:
       - /usr/share/zoneinfo/Europe/Moscow:/etc/localtime:ro
 
@@ -18,8 +18,8 @@ services:
       - JAVA_OPTS=-Dselenium.LOGGER.level=WARNING
       - HUB_PORT_4444_TCP_ADDR=hub
       - HUB_PORT_4444_TCP_PORT=4444
-      - NODE_MAX_INSTANCES=4
-      - NODE_MAX_SESSION=4
+      - NODE_MAX_INSTANCES=2
+      - NODE_MAX_SESSION=2
       - NODE_APPLICATION_NAME=chrome-ipv4
       - http_proxy=http://proxy:8080
       - https_proxy=http://proxy:8080
@@ -36,8 +36,8 @@ services:
       - JAVA_OPTS=-Dselenium.LOGGER.level=WARNING
       - HUB_PORT_4444_TCP_ADDR=hub
       - HUB_PORT_4444_TCP_PORT=4444
-      - NODE_MAX_INSTANCES=16
-      - NODE_MAX_SESSION=16
+      - NODE_MAX_INSTANCES=2
+      - NODE_MAX_SESSION=2
       - NODE_APPLICATION_NAME=chrome-ipv6
       - http_proxy=http://proxy:5050
       - https_proxy=http://proxy:5050
