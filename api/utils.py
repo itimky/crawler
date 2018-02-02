@@ -23,12 +23,6 @@ class DriverContextManager(object):
         return self.driver
 
     def __exit__(self, exc_type, exc_val, exc_tb):
-        try:
-            # self.driver.get("about:blank")
-            self.driver.delete_all_cookies()
-            # self.driver.execute_script('localStorage.clear();')
-        except WebDriverException:
-            pass
         return False
 
 
@@ -93,3 +87,25 @@ def solve_captcha(img_filename, is_russian=True):
 def wait_for_jquery_ajax(driver, timeout=10):
     WebDriverWait(driver, timeout).until(
         lambda d: d.execute_script("return jQuery.active == 0"))
+
+
+def get_clear_browsing_button(driver):
+    """Find the "CLEAR BROWSING BUTTON" on the Chrome settings page."""
+    return driver.find_element_by_css_selector(
+        '* /deep/ #clearBrowsingDataConfirm')
+
+
+def clear_driver_cache(driver, timeout=60):
+    """Clear the cookies and cache for the ChromeDriver instance."""
+    # navigate to the settings page
+    driver.get('chrome://settings/clearBrowserData')
+
+    # wait for the button to appear
+    wait = WebDriverWait(driver, timeout)
+    wait.until(get_clear_browsing_button)
+
+    # click the button to clear the cache
+    get_clear_browsing_button(driver).click()
+
+    # wait for the button to be gone before returning
+    wait.until_not(get_clear_browsing_button)

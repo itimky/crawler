@@ -42,5 +42,6 @@ class Google(Resource):
                 if 'IndexRedirect?' not in driver.current_url \
                         and 'google.com/sorry/' not in driver.current_url:
                     return {'soup': utils.get_soup(driver.page_source)}
+                utils.clear_driver_cache(driver)
         return {'error': 'Still captcha after %s retries' % RETRIES},\
             HTTP_429_TOO_MANY_REQUESTS
