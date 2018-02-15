@@ -1,4 +1,5 @@
 import pickle
+import random
 from os import path
 
 from antigate import AntiGate
@@ -9,7 +10,7 @@ from selenium.webdriver.support.wait import WebDriverWait
 from selenium.common.exceptions import WebDriverException
 from bs4 import BeautifulSoup
 
-from .config import HUB_URL, KEY_ANTIGATE
+from .config import HUB_URL, KEY_ANTIGATE, BROWSERS
 
 
 class DriverContextManager(object):
@@ -35,8 +36,16 @@ def context_manager(fn):
 
 @context_manager
 def get_chrome_ipv4():
+    driver = webdriver.Remote(
+        command_executor=HUB_URL,
+        desired_capabilities=DesiredCapabilities.CHROME)
+    return driver
+
+
+@context_manager
+def get_chrome_ipv6():
     capabilities = DesiredCapabilities.CHROME
-    capabilities['applicationName'] = 'chrome-ipv4'
+    capabilities['version'] = '64.0'
     driver = webdriver.Remote(
         command_executor=HUB_URL,
         desired_capabilities=capabilities)
@@ -44,12 +53,15 @@ def get_chrome_ipv4():
 
 
 @context_manager
-def get_chrome_ipv6():
-    capabilities = DesiredCapabilities.CHROME
-    capabilities['applicationName'] = 'chrome-ipv6'
+def get_random_ipv6():
+    """Returns random browser with IPv6 proxy"""
+    cap = DesiredCapabilities.CHROME.copy() if random.randint(0, 1) \
+        else DesiredCapabilities.FIREFOX.copy()
+    versions = BROWSERS[cap['browserName']]
+    cap['version'] = versions[random.randint(0, len(versions) - 1)]
     driver = webdriver.Remote(
         command_executor=HUB_URL,
-        desired_capabilities=capabilities)
+        desired_capabilities=cap)
     return driver
 
 

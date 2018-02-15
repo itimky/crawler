@@ -1,51 +1,17 @@
 version: '3'
 
 services:
-  hub:
-    image: selenium/hub:3.8.1
-    restart: unless-stopped
-    environment:
-      - JAVA_OPTS=-Dselenium.LOGGER.level=WARNING
-      - GRID_TIMEOUT=45
-      - GRID_MAX_SESSION=20
+  selenoid:
+    image: selenoid/hub:latest
     volumes:
       - /usr/share/zoneinfo/Europe/Moscow:/etc/localtime:ro
-
-  chrome-ipv4:
-    image: selenium/node-chrome:3.8.1
-    restart: unless-stopped
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./selenoid:/etc/selenoid
     environment:
-      - JAVA_OPTS=-Dselenium.LOGGER.level=WARNING
-      - HUB_PORT_4444_TCP_ADDR=hub
-      - HUB_PORT_4444_TCP_PORT=4444
-      - NODE_MAX_INSTANCES=4
-      - NODE_MAX_SESSION=4
-      - NODE_APPLICATION_NAME=chrome-ipv4
-      - http_proxy=http://proxy:8080
-      - https_proxy=http://proxy:8080
-    depends_on:
-      - hub
-    volumes:
-      - /usr/share/zoneinfo/Europe/Moscow:/etc/localtime:ro
-      - /dev/shm:/dev/shm
-
-  chrome-ipv6:
-    image: selenium/node-chrome:3.8.1
-    restart: unless-stopped
-    environment:
-      - JAVA_OPTS=-Dselenium.LOGGER.level=WARNING
-      - HUB_PORT_4444_TCP_ADDR=hub
-      - HUB_PORT_4444_TCP_PORT=4444
-      - NODE_MAX_INSTANCES=16
-      - NODE_MAX_SESSION=16
-      - NODE_APPLICATION_NAME=chrome-ipv6
-      - http_proxy=http://proxy:5050
-      - https_proxy=http://proxy:5050
-    depends_on:
-      - hub
-    volumes:
-      - /usr/share/zoneinfo/Europe/Moscow:/etc/localtime:ro
-      - /dev/shm:/dev/shm
+      - DOCKER_API_VERSION=1.35
+    command: ["-conf", "/etc/selenoid/browsers.json", '-container-network', 'crawler_default']
+    expose:
+      - 4444
 
   proxy:
     build:
@@ -70,3 +36,5 @@ services:
       - /usr/share/zoneinfo/Europe/Moscow:/etc/localtime:ro
       - ./api:/app/api
       - ./var:/app/var
+    ports:
+      - 3032:3032
