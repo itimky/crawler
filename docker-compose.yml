@@ -3,6 +3,7 @@ version: '3'
 services:
   selenoid:
     image: selenoid/hub:latest
+    restart: unless-stopped
     volumes:
       - /usr/share/zoneinfo/Europe/Moscow:/etc/localtime:ro
       - /var/run/docker.sock:/var/run/docker.sock
