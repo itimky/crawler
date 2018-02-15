@@ -1,4 +1,4 @@
-#!/usr/bin/env sh
+#!/usr/bin/env bash
 
 declare -a ARR=(
     'selenoid/chrome:latest'
@@ -13,6 +13,6 @@ declare -a ARR=(
     'selenoid/firefox:57.0'
 )
 
-printf "%s\n" ${ARR[*]} | gxargs -l docker pull
+printf "%s\n" ${ARR[*]} | xargs -l docker pull
 
 
