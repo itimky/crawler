@@ -54,11 +54,13 @@ function updateProxies() {
       let newProxiesIPv4 = [];
       let newProxiesIPv6 = [];
       for (let value of Object.values(JSON.parse(data).list)) {
-        let url = value.type + '://' + value.user + ':' + value.pass + '@' + value.host + ':' + value.port;
-        if (value.ip.indexOf(':') > -1) {
-          newProxiesIPv6.push(url);
-        } else {
-          newProxiesIPv4.push(url);
+        if (value.type === 'http') {
+          let url = value.type + '://' + value.user + ':' + value.pass + '@' + value.host + ':' + value.port;
+          if (value.ip.indexOf(':') > -1) {
+            newProxiesIPv6.push(url);
+          } else {
+            newProxiesIPv4.push(url);
+          }
         }
       }
       proxiesIPv4 = newProxiesIPv4;
