@@ -1,3 +1,4 @@
+import requests
 from flask_restful import reqparse, Resource
 
 from . import utils
@@ -6,6 +7,10 @@ from . import utils
 HTTP_429_TOO_MANY_REQUESTS = 429
 RETRIES = 1
 GOOGLE_URL = 'https://www.google.ru/search?num=100&q=%s&near=%s'
+PROXIES = {
+    'http': 'http://proxy:5050',
+    'https': 'http://proxy:5050',
+}
 
 
 def get_query_parser():
@@ -36,11 +41,10 @@ class Google(Resource):
         """
         args = get_query_parser().parse_args()
         link = GOOGLE_URL % (args.query, args.region)
+
         for i in range(RETRIES):
-            with utils.get_random_ipv6() as driver:
-                driver.get(link)
-                if 'IndexRedirect?' not in driver.current_url \
-                        and 'google.com/sorry/' not in driver.current_url:
-                    return {'soup': utils.get_soup(driver.page_source)}
+            r = requests.get(link, proxies=PROXIES)
+            if 'google.com/sorry/' not in r.url:
+                    return {'soup': utils.get_soup(r.text)}
         return {'error': 'Still captcha after %s retries' % RETRIES},\
             HTTP_429_TOO_MANY_REQUESTS
